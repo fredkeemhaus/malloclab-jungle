@@ -114,14 +114,14 @@ static void *coalesce(void *bp) {
     }
     else if(!prev_alloc && next_alloc) { // case 3 - 이전 블록은 가용상태, 다음 블록은 할당 상태. 이전 블록은 현재 블록과 통합. 
         size+= GET_SIZE(HDRP(PREV_BLKP(bp))); 
-        PUT(FTRP(bp), PACK(size,0));  // 푸터에 먼저 조정하려는 크기로 상태 변경한다.
+        PUT(FTRP(bp), PACK(size, 0));  // 푸터에 먼저 조정하려는 크기로 상태 변경한다.
         PUT(HDRP(PREV_BLKP(bp)), PACK(size,0)); // 현재 헤더에서 그 앞블록의 헤더 위치로 이동한 다음에, 조정한 size를 넣는다.
         bp = PREV_BLKP(bp); // bp를 그 앞블록의 헤더로 이동(늘린 블록의 헤더이니까.)
     }
     else { // case 4- 이전 블록과 다음 블록 모두 가용상태. 이전,현재,다음 3개의 블록 모두 하나의 가용 블록으로 통합.
-        size+= GET_SIZE(HDRP(PREV_BLKP(bp))) + GET_SIZE(FTRP(NEXT_BLKP(bp))); // 이전 블록 헤더, 다음 블록 푸터 까지로 사이즈 늘리기
-        PUT(HDRP(PREV_BLKP(bp)), PACK(size,0)); // 헤더부터 앞으로 가서 사이즈 넣고
-        PUT(FTRP(NEXT_BLKP(bp)), PACK(size,0)); // 푸터를 뒤로 가서 사이즈 넣는다.
+        size += GET_SIZE(HDRP(PREV_BLKP(bp))) + GET_SIZE(FTRP(NEXT_BLKP(bp))); // 이전 블록 헤더, 다음 블록 푸터 까지로 사이즈 늘리기
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, 0)); // 헤더부터 앞으로 가서 사이즈 넣고
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, 0)); // 푸터를 뒤로 가서 사이즈 넣는다.
         bp = PREV_BLKP(bp); // 헤더는 그 전 블록으로 이동.
     }
     return bp; // 4개 케이스중에 적용된거로 bp 리턴
@@ -246,17 +246,3 @@ void *mm_realloc(void *bp, size_t size) { // 크기를 조정할 블록의 위�
 
     return newp;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
