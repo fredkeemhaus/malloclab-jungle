@@ -135,7 +135,7 @@ static void *extend_heap(size_t words) { // 새 가용 블록으로 힙 확장, 
     // (1024 % 2) ? (1024 + 1) * 4 : 1024 * 4 = 4096 1word는 4byte이므로 size는 1024words를 갖는다.
     size = (words % 2) ? (words + 1) * WSIZE : words * WSIZE; // 홀수이면(1이나오니까) 앞에꺼, 짝수이면(0이 나오니까) 뒤에꺼. 홀수 일 때 +1 하는건 8의 배수 맞추기 위함인듯.
     // 홀수가 나오면 사이즈를 한번 더 재정의. 힙에서 늘릴 사이즈를 재정의.
-    if ( (long)(bp = mem_sbrk(size)) == -1) { // sbrk로 size로 늘려서 long 형으로 반환한다.(한번 쫙 미리 늘려놓는 것) mem_sbrk가 반환되면 bp는 현재 만들어진 블록의 끝에 가있음.
+    if ( (long)(bp = mem_sbrk(size)) == -1) { // sbrk로 size로 늘려서 long 형으로 반환한다.(한번 쫙 미리 늘려놓는 것) mem_sbrk가 반환되면 bp는 현재 만들어진 블록의 끝에 가있음. (old_brk를 return, size만큼 increase)
         return NULL;
     } // 사이즈를 늘릴 때마다 old brk는 과거의 mem_brk위치로 감.
 
