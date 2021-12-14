@@ -36,13 +36,13 @@ team_t team = {
 };
 
 /* single word (4) or double word (8) alignment */
-// #define ALIGNMENT 8
+#define ALIGNMENT 8
 
 // /* rounds up to the nearest multiple of ALIGNMENT */
-// #define ALIGN(size) (((size) + (ALIGNMENT-1)) & ~0x7)
+#define ALIGN(size) (((size) + (ALIGNMENT-1)) & ~0x7)
 
 
-// #define SIZE_T_SIZE (ALIGN(sizeof(size_t)))
+#define SIZE_T_SIZE (ALIGN(sizeof(size_t)))
 
 // 기본 상수 및 매크로
 #define WSIZE 4 // word and header footer 사이즈를 byte로. 
@@ -188,7 +188,8 @@ void *mm_malloc(size_t size) { // 가용 리스트에서 블록 할당 하기
         asize = 2 * DSIZE; // 헤더와 푸터를 포함해서 블록 사이즈를 다시 조정해야되니까 DSIZE의 2배를 준다.(헤더와 푸터 합쳐서 8바이트)예를 들어 헤더와 푸터에는 16/1 이 들어간다.
     }
     else {
-        asize = DSIZE * ( (size + (DSIZE) + (DSIZE - 1)) / DSIZE ); // size보다 클 때, 블록이 가질 수 있는 크기 중에 최적화된 크기로 재조정.
+        // asize = DSIZE * ( (size + (DSIZE) + (DSIZE - 1)) / DSIZE ); // size보다 클 때, 블록이 가질 수 있는 크기 중에 최적화된 크기로 재조정.
+        asize = MAX(DSIZE + ALIGN(size), 2 * DSIZE); // ALIGN 매크로 사용
     }
     /* fit에 맞는 free 리스트를 찾는다.*/
     if ((bp = find_fit(asize)) != NULL) {
