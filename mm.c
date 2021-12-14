@@ -40,15 +40,11 @@ team_t team = {
 
 // /* rounds up to the nearest multiple of ALIGNMENT */
 #define ALIGN(size) (((size) + (ALIGNMENT-1)) & ~0x7)
-
-
 #define SIZE_T_SIZE (ALIGN(sizeof(size_t)))
-
 // 기본 상수 및 매크로
 #define WSIZE 4 // word and header footer 사이즈를 byte로. 
 #define DSIZE 8 // double word size를 byte로
 #define CHUNKSIZE (1<<12) // heap을 늘릴 때 얼만큼 늘릴거냐? 4kb 분량.
-
 #define MAX(x,y) ((x)>(y)? (x) : (y)) // x,y 중 큰 값을 가진다.
 
 // size를 pack하고 개별 word 안의 bit를 할당 (size와 alloc을 비트연산), 헤더에서 써야하기 때문에 만듬.
@@ -140,8 +136,8 @@ static void *extend_heap(size_t words) { // 새 가용 블록으로 힙 확장, 
     } // 사이즈를 늘릴 때마다 old brk는 과거의 mem_brk위치로 감.
 
     /* free block 헤더와 푸터를 init하고 epilogue 헤더를 init*/
-    PUT(HDRP(bp), PACK(size,0)); // free block header 생성. /(prologue block이랑 헷갈리면 안됨.) regular block의 총합의 첫번째 부분. 현재 bp 위치의 한 칸 앞에 헤더를 생성.
-    PUT(FTRP(bp), PACK(size,0)); // free block footer / regular block 총합의 마지막 부분.
+    PUT(HDRP(bp), PACK(size, 0)); // free block header 생성. /(prologue block이랑 헷갈리면 안됨.) regular block의 총합의 첫번째 부분. 현재 bp 위치의 한 칸 앞에 헤더를 생성.
+    PUT(FTRP(bp), PACK(size, 0)); // free block footer / regular block 총합의 마지막 부분.
     PUT(HDRP(NEXT_BLKP(bp)), PACK(0,1)); // 블록을 추가했으니 epilogue header를 새롭게 위치 조정해줌. (HDRP: 1워드 뒤에 있는 것을 지칭.)
     // 처음 세팅의 의미 = bp를 헤더에서 읽은 사이즈만큼 이동하고, 앞으로 한칸 간다. 그 위치가 결국 늘린 블록 끝에서 한칸 간거라 거기가 epilogue header 위치.
 
