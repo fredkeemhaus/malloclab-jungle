@@ -24,7 +24,7 @@
  ********************************************************/
 team_t team = {
     /* Team name */
-    "ateam",
+    "6th",
     /* First member's full name */
     "Kim Jun Yeong",
     /* First member's email address */
